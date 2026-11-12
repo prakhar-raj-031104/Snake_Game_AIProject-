@@ -13,8 +13,12 @@ class Renderer:
     def __init__(self, config: GameConfig, screen: pygame.Surface) -> None:
         self.config = config
         self.screen = screen
-        self.font = pygame.font.SysFont("arial", 22, bold=True)
-        self.big_font = pygame.font.SysFont("arial", 40, bold=True)
+        try:
+            self.font = pygame.font.SysFont("arial", 22, bold=True)
+            self.big_font = pygame.font.SysFont("arial", 40, bold=True)
+        except Exception:
+            self.font = None
+            self.big_font = None
 
     def draw(self, game: SnakeGame, path: list[Point], paused: bool,
              show_path: bool) -> None:
@@ -63,6 +67,8 @@ class Renderer:
                              border_radius=6)
 
     def _draw_hud(self, game: SnakeGame, paused: bool) -> None:
+        if self.font is None:
+            return
         text = f"Score: {game.score}    Length: {len(game.snake)}    Steps: {game.steps}"
         if paused:
             text += "    [PAUSED]"
@@ -70,6 +76,8 @@ class Renderer:
         self.screen.blit(surface, (10, (self.config.hud_height - surface.get_height()) // 2))
 
     def _draw_end_message(self, status: GameStatus) -> None:
+        if self.font is None or self.big_font is None:
+            return
         message = "YOU WIN!" if status == GameStatus.WON else "GAME OVER"
         lines = [(message, self.big_font), ("Press R to restart, ESC to quit", self.font)]
 

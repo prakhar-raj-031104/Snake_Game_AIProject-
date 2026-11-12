@@ -64,7 +64,9 @@ Snake_Game_AIProject-/
 
 ## How to run it on your laptop
 
-**Requirements:** Python 3.10 or newer.
+**Requirements:** Python 3.10 or newer (tested on Python 3.10 through 3.14).
+
+> **Note:** The project uses `pygame-ce` (Pygame Community Edition) in `requirements.txt`, which provides out-of-the-box precompiled support across all modern Python releases (including Python 3.12+ and 3.14).
 
 1. Clone the repository and enter the folder:
 

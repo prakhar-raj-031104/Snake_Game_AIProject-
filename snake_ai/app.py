@@ -24,7 +24,10 @@ class SnakeApp:
 
     def run(self) -> None:
         pygame.display.init()  # only what we need (no audio)
-        pygame.font.init()
+        try:
+            pygame.font.init()
+        except Exception:
+            pass
         try:
             screen = pygame.display.set_mode(self.config.window_size)
             pygame.display.set_caption("Snake AI - Breadth-First Search")

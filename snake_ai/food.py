@@ -1,24 +1,49 @@
-"""The food the snake is trying to eat."""
+"""Food the snake can eat: normal apples and time-limited golden apples."""
 
 import random
+from dataclasses import dataclass
 
-from .board import Board
 from .geometry import Point
-from .snake import Snake
 
 
+@dataclass(frozen=True)
+class FoodKind:
+    """What kind of food this is and how much it is worth."""
+
+    name: str
+    points: int
+    lifetime: int | None  # moves before it disappears (None = never)
+
+
+APPLE = FoodKind("apple", points=1, lifetime=None)
+GOLDEN = FoodKind("golden apple", points=5, lifetime=40)
+
+
+@dataclass
 class Food:
-    """Places food on a random empty cell."""
+    """One piece of food lying on the board."""
 
-    def __init__(self, rng: random.Random | None = None) -> None:
-        self._rng = rng or random.Random()
-        self.position: Point | None = None
+    position: Point
+    kind: FoodKind
+    moves_left: int | None = None
 
-    def respawn(self, board: Board, snake: Snake) -> bool:
-        """Move the food to a free cell. Returns False if the board is full."""
-        free_cells = [cell for cell in board.all_cells() if not snake.occupies(cell)]
+    @classmethod
+    def spawn(cls, kind: FoodKind, free_cells: list[Point],
+              rng: random.Random) -> "Food | None":
+        """Place food of `kind` on a random free cell (None if there is no room)."""
         if not free_cells:
-            self.position = None
-            return False
-        self.position = self._rng.choice(free_cells)
-        return True
+            return None
+        return cls(rng.choice(free_cells), kind, kind.lifetime)
+
+    @property
+    def points(self) -> int:
+        return self.kind.points
+
+    @property
+    def expired(self) -> bool:
+        return self.moves_left is not None and self.moves_left <= 0
+
+    def tick(self) -> None:
+        """One move has passed. Time-limited food gets closer to vanishing."""
+        if self.moves_left is not None:
+            self.moves_left -= 1

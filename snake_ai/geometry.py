@@ -1,41 +1,42 @@
-"""Basic building blocks: a grid position and the four move directions."""
+"""Basic building blocks: a 3D grid position and the six move directions."""
 
 from enum import Enum
 from typing import NamedTuple
 
 
 class Point(NamedTuple):
-    """A cell on the grid. x is the column, y is the row."""
+    """A cell in the 3D grid.
+
+    x = left/right, y = back/forward, z = down/up.
+    `z` defaults to 0, so 2D code can still write Point(x, y).
+    """
 
     x: int
     y: int
+    z: int = 0
 
-    def __add__(self, other: "Point") -> "Point":
-        return Point(self.x + other.x, self.y + other.y)
+    def __add__(self, other: "Point") -> "Point":  # type: ignore[override]
+        return Point(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def scaled(self, factor: int) -> "Point":
+        return Point(self.x * factor, self.y * factor, self.z * factor)
 
 
 class Direction(Enum):
-    """The four directions the snake can move in."""
+    """The six directions the snake can move in a 3D world."""
 
-    UP = Point(0, -1)
-    DOWN = Point(0, 1)
-    LEFT = Point(-1, 0)
-    RIGHT = Point(1, 0)
+    RIGHT = Point(1, 0, 0)
+    LEFT = Point(-1, 0, 0)
+    FORWARD = Point(0, 1, 0)
+    BACKWARD = Point(0, -1, 0)
+    UP = Point(0, 0, 1)
+    DOWN = Point(0, 0, -1)
 
     @property
     def opposite(self) -> "Direction":
-        return _OPPOSITES[self]
+        return Direction(self.value.scaled(-1))
 
     @staticmethod
     def between(start: Point, end: Point) -> "Direction":
         """Return the direction that moves from `start` to the adjacent `end`."""
-        delta = Point(end.x - start.x, end.y - start.y)
-        return Direction(delta)
-
-
-_OPPOSITES = {
-    Direction.UP: Direction.DOWN,
-    Direction.DOWN: Direction.UP,
-    Direction.LEFT: Direction.RIGHT,
-    Direction.RIGHT: Direction.LEFT,
-}
+        return Direction(Point(end.x - start.x, end.y - start.y, end.z - start.z))

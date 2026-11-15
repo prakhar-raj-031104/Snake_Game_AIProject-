@@ -7,25 +7,33 @@ Color = tuple[int, int, int]
 
 @dataclass(frozen=True)
 class GameConfig:
-    """Settings for the board, speed and colours."""
+    """Settings for the world, speed, window and colours."""
 
-    grid_width: int = 20          # number of columns
-    grid_height: int = 20         # number of rows
-    cell_size: int = 30           # size of one cell in pixels
-    fps: int = 15                 # game speed (moves per second)
-    hud_height: int = 40          # height of the score bar on top
+    # World size (height 1 = classic flat Snake)
+    width: int = 10
+    depth: int = 10
+    height: int = 10
+    rock_ratio: float = 0.03      # share of cells filled with rocks
+    golden_chance: float = 0.3    # chance a golden apple appears after an apple
 
-    background_color: Color = (20, 20, 30)
-    grid_color: Color = (35, 35, 50)
-    snake_head_color: Color = (80, 220, 100)
-    snake_body_color: Color = (40, 160, 70)
-    food_color: Color = (230, 70, 70)
-    path_color: Color = (70, 90, 170)
+    # Speed and window
+    moves_per_second: int = 8
+    window_width: int = 1100
+    window_height: int = 800
+    hud_height: int = 56
+
+    # Colours
+    background_color: Color = (14, 19, 32)
+    floor_color: Color = (24, 32, 52)
+    grid_color: Color = (44, 56, 84)
+    box_color: Color = (60, 74, 108)
+    shadow_color: Color = (10, 14, 24)
+    snake_head_color: Color = (184, 255, 201)
+    snake_body_color: Color = (63, 191, 106)
+    snake_tail_color: Color = (30, 110, 70)
+    rock_color: Color = (120, 112, 128)
+    apple_color: Color = (255, 92, 70)
+    golden_color: Color = (255, 205, 60)
+    path_color: Color = (122, 162, 255)
     text_color: Color = (240, 240, 240)
-
-    @property
-    def window_size(self) -> tuple[int, int]:
-        """Pixel size of the whole window (board + score bar)."""
-        width = self.grid_width * self.cell_size
-        height = self.grid_height * self.cell_size + self.hud_height
-        return width, height
+    muted_text_color: Color = (150, 160, 185)

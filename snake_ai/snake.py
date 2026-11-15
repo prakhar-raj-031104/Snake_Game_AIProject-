@@ -13,9 +13,7 @@ class Snake:
         self.direction = direction
         # Build the body behind the head, opposite to the moving direction.
         back = direction.opposite.value
-        self._body: deque[Point] = deque(
-            Point(start.x + back.x * i, start.y + back.y * i) for i in range(length)
-        )
+        self._body: deque[Point] = deque(start + back.scaled(i) for i in range(length))
         self._cells: set[Point] = set(self._body)  # fast "is this cell snake?" lookup
 
     @property

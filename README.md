@@ -242,6 +242,7 @@ Measured with headless mode (3 games each, `--seed 1`):
 
 | World | Rocks | Average score | Best score | Golden apples eaten (best game) |
 |-------|-------|---------------|------------|---------------------------------|
+| 3D cube 10 × 10 × 10 (default) | 3% | 975.3 | 1258 | 141 |
 | 3D cube 8 × 8 × 8 | 3% | 603.3 | 692 | 77 |
 | Flat 20 × 20 (`--height 1`) | none | 383.3 | 504 | 49 |
 
